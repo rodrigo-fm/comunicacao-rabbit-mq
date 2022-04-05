@@ -10,9 +10,9 @@ public class EmissorDirect {
 
 	public static void main(String[] argv) throws Exception {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("127.0.0.1"); // Alterar
-		factory.setUsername("guest"); // Alterar
-		factory.setPassword("guest"); // Alterar
+		factory.setHost("127.0.0.1");
+		factory.setUsername("guest");
+		factory.setPassword("guest");
 		factory.setVirtualHost("/");
 		Connection connection = factory.newConnection();
 		Channel channel = connection.createChannel();
