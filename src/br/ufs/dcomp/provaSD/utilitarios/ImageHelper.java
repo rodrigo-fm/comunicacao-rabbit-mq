@@ -1,4 +1,4 @@
-package br.ufs.dcomp.provaSD;
+package br.ufs.dcomp.provaSD.utilitarios;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
