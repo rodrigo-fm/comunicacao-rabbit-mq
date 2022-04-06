@@ -30,7 +30,6 @@ public class ReceberImagem {
 		System.out.println("Aguardando recebimento de imagem");
 		
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-			
 			try {
 				ImagensSingleton imagensSingleton = ImagensSingleton.getInstance();
 				BufferedImage imagem = byteArrayToImage(delivery.getBody());
