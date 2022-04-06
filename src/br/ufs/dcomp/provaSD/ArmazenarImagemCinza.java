@@ -38,17 +38,31 @@ public class ArmazenarImagemCinza {
 		
 		System.out.println("Inicializado o servidor para armazenar imagens");
 		
-		Consumer consumer = new DefaultConsumer(channel) {
-			public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) throws Exception {
-				BufferedImage imagem = ImageHelper.byteArrayToImage(body);
+		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+			BufferedImage imagem;
+			try {
+				imagem = ImageHelper.byteArrayToImage(delivery.getBody());
 				String nomeImagem = String.valueOf(random.nextInt(425678));
-				
 				File saida = new File("C:\\imagens-sd\\cinzas\\" + nomeImagem + ".jpg");
 				ImageIO.write(imagem, "jpg", saida);
 				System.out.println("Imagem grayscale armazenada");
-			}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		};
 		
-		channel.basicConsume(nomeFila, true, consumer);
+		channel.basicConsume(nomeFila, true, deliverCallback, consumerTag -> { });
+		
+//		Consumer consumer = new DefaultConsumer(channel) {
+//			public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) throws Exception {
+//				BufferedImage imagem = ImageHelper.byteArrayToImage(body);
+//				String nomeImagem = String.valueOf(random.nextInt(425678));
+//				
+//				File saida = new File("C:\\imagens-sd\\cinzas\\" + nomeImagem + ".jpg");
+//				ImageIO.write(imagem, "jpg", saida);
+//				System.out.println("Imagem grayscale armazenada");
+//			}
+//		};
 	}
 }
