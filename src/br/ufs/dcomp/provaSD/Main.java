@@ -6,22 +6,38 @@ import javax.imageio.ImageIO;
 
 public class Main {
 	
-	private static int numeroImagens = 25;
-	
-	private static BufferedImage lerImagem(String diretorio) throws Exception {
-		return ImageIO.read(new File(diretorio));
-	}
+	private static int quantidadeImagensCinza = 0;
 	
 	public static void main(String[] args) throws Exception {
-		// Enviar imagem do cliente (produtor) para o servidor (consumidor)
-		EnviarImagem enviarImagem = new EnviarImagem(numeroImagens);
+		File diretorio = new File("C:\\imagens-sd\\coloridas\\");
 		
-		enviarImagem.call();
+		File[] directoryListing = diretorio.listFiles();
 		
-//		// Converter imagens para preto e branco
-//		for(int i = 1; i <= 25; i++) {
-//			BufferedImage imagem = lerImagem("C:\\imagens-sd\\cliente-1\\imagem (" + i + ").jpg");
-//			ConverterImagem.call(imagem, "imagem (" + i + ")");
-//		}
+		if(directoryListing == null) {
+			System.out.println("Nenhuma imagem encontrada!!");
+		} else {
+			System.out.println("Quantidade de fotos: " + directoryListing.length);
+			for(File arquivo : directoryListing) {
+				BufferedImage imagem = ImageIO.read(arquivo);				
+				EnviarImagemColorida.call(imagem);
+			}
+			System.out.println("Saiu do for");
+			
+			// Loop para aguardar o processamento de todas as imagens para a escala de cinza
+			do {
+				Thread.sleep(1000);
+				File diretorioImagensCinza = new File("C:\\imagens-sd\\cinzas");
+				File[] directoryListingGrayscale = diretorioImagensCinza.listFiles();
+				quantidadeImagensCinza = directoryListingGrayscale.length;
+				System.out.println("Quantidade de imagens cinza: " + quantidadeImagensCinza);
+			} while(directoryListing.length > quantidadeImagensCinza);
+
+			System.out.println("Saiu do do / while");
+			System.out.println("Hora de salvar as imagens no servidor");
+			
+			// do while quantidade de fotos do singleton for menor que a quantidade de fotos coloridas
+			// dica: use um Thread.sleep(1000) no do while pra não fazer tanta checagem assim
+			
+		}
 	}
 }
