@@ -14,12 +14,6 @@ public class EnviarImagemColorida {
 	
 	private final static String QUEUE_NAME = "enviar-imagens";
 	
-	private static byte[] imageToByteArray(BufferedImage imagem) throws Exception {
-		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-		ImageIO.write(imagem, "jpg", byteArray);
-		return byteArray.toByteArray();
-	}
-	
 	public static void call(BufferedImage imagem) {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("127.0.0.1");
@@ -31,7 +25,7 @@ public class EnviarImagemColorida {
 			Channel channel = connection.createChannel();
 		) {
 			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-			channel.basicPublish("", QUEUE_NAME, null, imageToByteArray(imagem));
+			channel.basicPublish("", QUEUE_NAME, null, ImageHelper.imageToByteArray(imagem));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

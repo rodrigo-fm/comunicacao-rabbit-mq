@@ -7,7 +7,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class ConverterImagem {
-	// TODO: retornar a imagem em escala de cinza neste método
 	public static BufferedImage call(BufferedImage imagem, String output) throws Exception {
 		int largura = imagem.getWidth();
 		int altura = imagem.getHeight();
@@ -26,8 +25,6 @@ public class ConverterImagem {
 			}
 		}
 		
-		File saida = new File("C:\\imagens-sd\\cinzas\\" + output + ".jpg");
-		ImageIO.write(imagem, "jpg", saida);
 		return imagem;
 	}
 }
