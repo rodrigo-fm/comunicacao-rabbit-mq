@@ -12,6 +12,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
 import br.ufs.dcomp.provaSD.utilitarios.ImageHelper;
+import br.ufs.dcomp.provaSD.utilitarios.Imagem;
 
 public class ThreadServidorArmazenamento implements Runnable {
 
@@ -43,12 +44,11 @@ public class ThreadServidorArmazenamento implements Runnable {
 			
 			while(true) {
 				DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-					BufferedImage imagem;
 					try {
-						imagem = ImageHelper.byteArrayToImage(delivery.getBody());
-						String nomeImagem = String.valueOf(random.nextInt(425678));
-						File saida = new File("C:\\imagens-sd\\"+ this.nomeDiretorio +"\\" + nomeImagem + ".jpg");
-						ImageIO.write(imagem, "jpg", saida);
+						Imagem imagem = Imagem.toImagem(delivery.getBody());
+
+						File saida = new File("C:\\imagens-sd\\"+ this.nomeDiretorio +"\\" + imagem.getNome() + ".jpg");
+						ImageIO.write(ImageHelper.byteArrayToImage(imagem.getConteudo()), "jpg", saida);
 						System.out.println(this.nomeDiretorio + ": Imagem grayscale armazenada");
 					} catch (Exception e) {
 						e.printStackTrace();

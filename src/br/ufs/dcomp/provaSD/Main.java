@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-import br.ufs.dcomp.provaSD.utilitarios.EnviarImagemColorida;
-
 /*
  * OBS: É necessário criar o diretório "C:\imagens-sd" antes de inicializar a aplicação,
  * junto com os outros diretórios necessários, explicados nos comentários abaixo.
@@ -15,7 +13,7 @@ public class Main {
 	
 	// para cada cliente, crie uma pasta "cliente-{numero}" no diretório C:\imagens-sd\
 	// Ex: cliente-1, cliente-2. Até chegar na quantidade de Clientes escolhida
-	// Coloque fotos distintas em cada um dos diretórios dos clientes
+	// Coloque fotos distintas em cada um dos diretórios dos clientes criados.
 	private final static int quantidadeClientes = 2;
 	
 	// para cada servidor, crie uma pasta "servidor-{numero}" no diretório C:\imagens-sd\
@@ -38,13 +36,15 @@ public class Main {
 		// Inicialização das Threads contendo a lógica para converter uma imagem e enviar
 		// via fanout para os servidores responsáveis por armazenar
 		for(int i = 1; i <= quantidadeConversores; i++) {
-			Thread conversor = new Thread(new ThreadProcessarImagem("cliente-" + i));
+			Thread conversor = new Thread(new ThreadProcessarImagem("conversor-" + i));
 			conversor.start();
 		}
 
 		// Apenas para impedir que as Threads iniciem fora de ordem
 		Thread.sleep(1000);
 		
+		// Varredura de todas as diferentes pastas de clientes,
+		// garantindo que todas as imagens sejam lidas pelo algoritmo
 		for(int i = 1; i <= quantidadeClientes; i++) {
 			File diretorio = new File("C:\\imagens-sd\\cliente-"+ i +"\\");
 			File[] directoryListing = diretorio.listFiles();

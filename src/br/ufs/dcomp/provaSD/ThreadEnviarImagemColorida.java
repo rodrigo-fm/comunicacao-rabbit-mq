@@ -10,6 +10,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import br.ufs.dcomp.provaSD.utilitarios.ImageHelper;
+import br.ufs.dcomp.provaSD.utilitarios.Imagem;
 
 public class ThreadEnviarImagemColorida implements Runnable {
 
@@ -35,8 +36,10 @@ public class ThreadEnviarImagemColorida implements Runnable {
 				channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 				
 				for(File arquivo : this.arquivos) {
-					BufferedImage imagem = ImageIO.read(arquivo);
-					channel.basicPublish("", QUEUE_NAME, null, ImageHelper.imageToByteArray(imagem));
+					String nomeArquivo = arquivo.getName();
+					BufferedImage imagemArquivo = ImageIO.read(arquivo);
+					Imagem imagem = new Imagem(nomeArquivo, ImageHelper.imageToByteArray(imagemArquivo));
+					channel.basicPublish("", QUEUE_NAME, null, Imagem.toByteArray(imagem));
 				}
 			} catch(Exception e) {
 				e.printStackTrace();

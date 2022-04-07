@@ -10,6 +10,7 @@ import com.rabbitmq.client.DeliverCallback;
 
 import br.ufs.dcomp.provaSD.utilitarios.ConverterImagem;
 import br.ufs.dcomp.provaSD.utilitarios.ImageHelper;
+import br.ufs.dcomp.provaSD.utilitarios.Imagem;
 
 public class ThreadProcessarImagem implements Runnable {
 	private final static String QUEUE_NAME = "enviar-imagens";
@@ -47,15 +48,14 @@ public class ThreadProcessarImagem implements Runnable {
 					try {
 						
 						// Receber a imagem
-						BufferedImage imagem = ImageHelper.byteArrayToImage(delivery.getBody());
+						Imagem imagem = Imagem.toImagem(delivery.getBody());
 						
 						// Converter Imagem para escala de cinza
-						String nomeImagem = String.valueOf(random.nextInt(425678));
-						BufferedImage imagemCinza = ConverterImagem.call(imagem, nomeImagem);
+						Imagem imagemCinza = ConverterImagem.call(imagem);
 						System.out.println(this.nome + ": Imagem convertida em escala de cinza");
 						
 						// Enviar imagem da forma fanout para os servidores (consumidores) responsáveis por armazenar as imagens
-						channel.basicPublish(EXCHANGE_NAME, "", null, ImageHelper.imageToByteArray(imagemCinza));
+						channel.basicPublish(EXCHANGE_NAME, "", null, Imagem.toByteArray(imagemCinza));
 						
 					} catch(Exception e) {
 						e.printStackTrace();
